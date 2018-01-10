@@ -6,11 +6,11 @@ public class Fen_Jazz extends JFrame{
 
   public Fen_Jazz(){        
     this.setTitle("Animation");
-    this.setSize(640*3, 480*3);
+    this.setSize(640, 480);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setLocationRelativeTo(null);
     this.setContentPane(pan);
-    this.setResizable(false);
+    //this.setResizable(false);
     this.setVisible(true);
     go();
   }
