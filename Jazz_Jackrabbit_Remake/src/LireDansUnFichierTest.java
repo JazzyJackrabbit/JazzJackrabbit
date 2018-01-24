@@ -1,4 +1,4 @@
-package jazz;
+/*package jazz;
 
 import javax.swing.JPanel;
 
@@ -17,4 +17,4 @@ public class TestLevel {
               fin.close();    
           }catch(Exception e){System.out.println(e);}    
      }    
-}  
+}  */
