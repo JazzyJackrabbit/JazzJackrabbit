@@ -7,6 +7,9 @@ var ctx = document.getElementById('Jazz').getContext('2d');
 
 //Jazz vivant ou mort
 var die = new Boolean("false");
+die = false;
+var life = 5;
+
 //ecran
 var scx = 1024;
 var scy = 480;
@@ -83,6 +86,8 @@ for(var z=1; z<18; z+=0.5){
 
 var imgf = new Image();
 imgf.src = "./data/font.png";
+var imglife = new Image();
+imglife.src = "./data/life.png";
 
 //niveau
 var l = [];
@@ -187,6 +192,13 @@ setInterval(Frames,5);
 			};
 		};
 		
+		ctx.font = '28px Calibri';
+		ctx.fillStyle = 'white';
+		ctx.fillText('Jazz Jackrabbit', 10, 30);
+		ctx.drawImage(imglife, 10,35, 30,30);
+		ctx.fillText(life, 50, 60);
+		
+		
 		//affichage de Jazz
 		//if (direction==true){
 		if(xact==0){
@@ -235,7 +247,18 @@ setInterval(Frames,5);
 		//limite jazz
 		if (x<0){x+=speed};
 		if (x>256*t){x-=speed};
-		if (y>64*t){die=true};
+		if (y>64*t){die=1;console.log("1");};
+		
+		//si mort
+		if (die==1){
+			xcm = 0;
+			ycm = 0;	
+			x = t-4;
+			y = t*9-2;
+			console.log("2");
+			die=0;
+			life--;
+		}
 		
 		
 		
@@ -256,7 +279,7 @@ setInterval(Frames,5);
 		if(Touche==113||Touche==52){xact=-1;direction=true;};//q
 		if(Touche==100||Touche==54){xact=1;direction=false;};//d
 		if(Touche==122||Touche==56){yact=-1;saut=true}else{saut=false};//z
-		if(Touche==115||Touche==53){yact=1;view=true}else{view=false};//s
+		if(Touche==115||Touche==53){view=true}else{view=false};//s
 		if(Touche==81||Touche==68){xact=0;}//relaché
 		if(Touche==90||Touche==83){yact=0;}
 	};
