@@ -8,14 +8,14 @@ var ctx = document.getElementById('Jazz').getContext('2d');
 //Jazz vivant ou mort
 var die = new Boolean("false");
 //ecran
-var scx = 1500;
-var scy = 720;
+var scx = 1024;
+var scy = 480;
 
 //déplacement ou non de Jazz
 var xact=0;
 var yact=0;
 
-var speed = 8;
+var speed = 8/8;
 
 //taille images de la map
 var t = 32;
@@ -28,12 +28,15 @@ var tjy = 32;
 
 //direction Jazz
 var direction = new Boolean("false"); // true -> ; false <-
+direction = false;
 
 //saut Jazz (aprés collision)
 var saut = new Boolean("false"); 
+saut = false;
 
 //mode regarde en dessous de la map
 var view = new Boolean("false");
+view = false;
 
 //position Caméra
 var xcm = 0;
@@ -60,15 +63,18 @@ var imgj = [];
 var zero = "0";
 var i2 = 0;
 for(var z=1; z<18; z+=0.5){	
+	
 	if (z==10){zero=""};
 	img = new Image();	
-	if (i2==0){
-		img.src = "./data/JE/JJ1_"+zero+Math.trunc(z)+".PNG";
-	}else{
-		img.src = "./data/JE/JJ1_"+zero+Math.trunc(z)+"_I.PNG";
-	};
-	i2+=1;if(i2>1){i2=0};
-	imgj.push(img);	
+	if(z<6||z>=8){
+		if (i2==0){
+			img.src = "./data/JE/JJ1_"+zero+Math.trunc(z)+".PNG";
+		}else{
+			img.src = "./data/JE/JJ1_"+zero+Math.trunc(z)+"_I.PNG";
+		};
+		imgj.push(img);
+	}else{imgj.push(0);}
+	i2+=1;if(i2>1){i2=0};	
 	if(z==1){
 		img.src = "./data/JE/JJ1_01.PNG";
 		imgj[0]=img
@@ -91,13 +97,15 @@ l[311]=180;l[312]=181;l[313]=184;l[563]=1;l[564]=2;l[566]=185;l[567]=60;l[568]=6
 //fin charge niveau
 
 //collisions
-var c =  new Array(210,32,32);
+var c = [];
 for(var z=0; z<210; z++){//ID du bloc
 	//var c[z] = [];
+	c[z] = [];
 	for(var j=0; j<32; j++){//hauteur
+		c[z][j] = [];
 		//var c[z][j] = [];
 		for(var i=0; i<32; i++){//longueur
-			c[z,i,j] = 0;
+			c[z][j][i] = 0;
 			// 0 = rien
 			// 1 = passe par en dessous 
 			// 2 = ne passe pas par en dessous
@@ -106,8 +114,8 @@ for(var z=0; z<210; z++){//ID du bloc
 
 };
 
+c[62][0][0]=2;c[62][1][0]=2;c[62][2][0]=2;c[62][3][0]=2;c[62][4][0]=2;c[62][5][0]=2;c[62][6][0]=2;c[62][7][0]=2;c[62][8][0]=2;c[62][9][0]=2;c[62][10][0]=2;c[62][11][0]=2;c[62][12][0]=2;c[62][13][0]=2;c[62][14][0]=2;c[62][15][0]=2;c[62][16][0]=2;c[62][17][0]=2;c[62][18][0]=2;c[62][19][0]=2;c[62][20][0]=2;c[62][21][0]=2;c[62][22][0]=2;c[62][23][0]=2;c[62][24][0]=2;c[62][25][0]=2;c[62][26][0]=2;c[62][27][0]=2;c[62][28][0]=2;c[62][29][0]=2;c[62][30][0]=2;c[62][31][0]=2;c[62][0][1]=2;c[62][31][1]=2;c[62][0][2]=2;c[62][31][2]=2;c[62][0][3]=2;c[62][31][3]=2;c[62][0][4]=2;c[62][31][4]=2;c[62][0][5]=2;c[62][31][5]=2;c[62][0][6]=2;c[62][31][6]=2;c[62][0][7]=2;c[62][31][7]=2;c[62][0][8]=2;c[62][31][8]=2;c[62][0][9]=2;c[62][31][9]=2;c[62][0][10]=2;c[62][31][10]=2;c[62][0][11]=2;c[62][31][11]=2;c[62][0][12]=2;c[62][31][12]=2;c[62][0][13]=2;c[62][31][13]=2;c[62][0][14]=2;c[62][31][14]=2;c[62][0][15]=2;c[62][31][15]=2;c[62][0][16]=2;c[62][31][16]=2;c[62][0][17]=2;c[62][31][17]=2;c[62][0][18]=2;c[62][31][18]=2;c[62][0][19]=2;c[62][31][19]=2;c[62][0][20]=2;c[62][31][20]=2;c[62][0][21]=2;c[62][31][21]=2;c[62][0][22]=2;c[62][31][22]=2;c[62][0][23]=2;c[62][31][23]=2;c[62][0][24]=2;c[62][31][24]=2;c[62][0][25]=2;c[62][31][25]=2;c[62][0][26]=2;c[62][31][26]=2;c[62][0][27]=2;c[62][31][27]=2;c[62][0][28]=2;c[62][31][28]=2;c[62][0][29]=2;c[62][31][29]=2;c[62][0][30]=2;c[62][31][30]=2;c[62][0][31]=2;c[62][1][31]=2;c[62][2][31]=2;c[62][3][31]=2;c[62][4][31]=2;c[62][5][31]=2;c[62][6][31]=2;c[62][7][31]=2;c[62][8][31]=2;c[62][9][31]=2;c[62][10][31]=2;c[62][11][31]=2;c[62][12][31]=2;c[62][13][31]=2;c[62][14][31]=2;c[62][15][31]=2;c[62][16][31]=2;c[62][17][31]=2;c[62][18][31]=2;c[62][19][31]=2;c[62][20][31]=2;c[62][21][31]=2;c[62][22][31]=2;c[62][23][31]=2;c[62][24][31]=2;c[62][25][31]=2;c[62][26][31]=2;c[62][27][31]=2;c[62][28][31]=2;c[62][29][31]=2;c[62][30][31]=2;c[62][31][31]=2;
 
-console.log(c[11,1,1]);
 
 
 
@@ -124,7 +132,12 @@ setInterval(Frames,5);
 		
 		for(var j=0; j<64; j++){
 			for(var i=0; i<256; i++){
-			ctx.drawImage(imgt[l[i+j*256]], i*t+xcm,j*t+ycm, t,t);
+				
+			if(i>=-xcm/t-1&&i<(-xcm+scx)/t){
+				if(j>=-ycm/t-1&&j<(-ycm+scy)/t){
+					ctx.drawImage(imgt[l[i+j*256]], i*t+xcm,j*t+ycm, t,t);
+				}
+			}
 			
 			//collisions Jazz (voir programme qbasic)
 		
@@ -134,28 +147,17 @@ setInterval(Frames,5);
 					for(var ii=0;ii<32;ii++){ 
 					
 						if( (x-i*t)==ii  &&  (y-j*t)==jj ){
-							//if( c[ ( l[ i+j*256 ] ) ,0,0 ]==2 || c[(l[i+j*256]),0,0]==1 ){
+							if( c[ ( l[ i+j*256 ] ) ,0,0 ]==2 || c[(l[i+j*256]),0,0]==1 ){
 							
-								console.log("x/t ; y/t =    "+Math.trunc(x/t)+ "   " + Math.trunc(y/t)+ "                    "+" x-i*t ; y-j*t =    "+(x-i*t)+"    "+(y-j*t)+"                    "+" ID = "+ l[i+j*256]+"     col"+c[(l[i+j*256]),x-i*t,y-j*t]);
+								console.log("x/t ; y/t =    "+Math.trunc(x/t)+ "   " + Math.trunc(y/t)+ "                    "+" x-i*t ; y-j*t =    "+(x-i*t)+"    "+(y-j*t)+"                    "+" ID = "+ l[i+j*256]+"     col"+c[(l[i+j*256])][x-i*t][y-j*t]);
 
 								//if(c[(l[i+j*256]),x-i*t,y-j*t]==0){
 									
 								//};
 								
 								
-
 								
-								
-								
-
-							
-				
-							
-				
-								
-								
-								
-							//}
+							}
 						}
 						//ctx.strokeStyle="red";
 						//ctx.rect(ii+i*t,jj+j*t,ii+1+i*t,jj+1+j+t);
@@ -191,10 +193,11 @@ setInterval(Frames,5);
 			if(view==false){
 				if(saut==true){
 					ctx.drawImage(imgj[16+direction],x+xcm,y+ycm,tjx,tjy);
+					y-=speed;
 				}else{//normal
 					ctx.drawImage(imgj[0+direction],x+xcm,y+ycm,tjx,tjy);
 					//gravité test
-					y+=speed;
+					
 				}
 			}else{
 				ctx.drawImage(imgj[14+direction],x+xcm,y+ycm,tjx,tjy);
@@ -202,6 +205,8 @@ setInterval(Frames,5);
 		}else{ //running
 			ctx.drawImage(imgj[2+direction],x+xcm,y+ycm,tjx,tjy);
 		}
+		
+		y+=speed;
 
 		//aprés commande (execution du déplacement)
 		 if (xact==-1){x-=speed};
@@ -210,8 +215,13 @@ setInterval(Frames,5);
 		 if (yact==+1){y+=speed};
 		
 		//déplace la caméra 
-		if (x+xcm > scx/2){xcm-=speed}
-		if (x+xcm < scx/2){xcm+=speed}
+		if(direction==false){
+			if (x+xcm > scx/3){xcm-=speed}
+			if (x+xcm < scx/3){xcm+=speed}
+		}else{
+			if (x+xcm > (scx/3)*2){xcm-=speed}
+			if (x+xcm < (scx/3)*2){xcm+=speed}
+		}
 		if (y+ycm > scy/2){ycm-=speed}
 		if (y+ycm < scy/2){ycm+=speed}
 		
