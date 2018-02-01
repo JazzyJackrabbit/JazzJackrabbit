@@ -8,14 +8,14 @@ var ctx = document.getElementById('Jazz').getContext('2d');
 //Jazz vivant ou mort
 var die = new Boolean("false");
 //ecran
-var scx = 1000;
-var scy = 650;
+var scx = 1500;
+var scy = 720;
 
 //déplacement ou non de Jazz
 var xact=0;
 var yact=0;
 
-var speed = 8/8;
+var speed = 8;
 
 //taille images de la map
 var t = 32;
@@ -119,8 +119,8 @@ setInterval(Frames,5);
 	function Frames(){
 		
 		//affichage de la map + collisions
-		ctx.clearRect(0,0,0,1000,650);
-		ctx.drawImage(imgf,0,0,1000,650);
+		ctx.clearRect(0,0,0,scx,scy);
+		ctx.drawImage(imgf,0,0,scx,scy);
 		
 		for(var j=0; j<64; j++){
 			for(var i=0; i<256; i++){
