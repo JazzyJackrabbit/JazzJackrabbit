@@ -41,6 +41,10 @@ saut = false;
 var view = new Boolean("false");
 view = false;
 
+//en l'air ou non
+var inair = 2; // 0 rien ou fin saut ; 1 = saut ; 2 = arrete de sauter et tombe
+var jump = 0; //valeur vitesse de déplacement sur y
+
 //position Caméra
 var xcm = 0;
 var ycm = 0;
@@ -128,6 +132,22 @@ c[12][20][5]=1;c[12][21][5]=1;c[12][19][6]=1;c[12][20][6]=1;c[12][18][7]=1;c[12]
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 setInterval(Frames,5);
 
 	function Frames(){
@@ -147,45 +167,87 @@ setInterval(Frames,5);
 			
 			//collisions Jazz (voir programme qbasic)
 		
-			if(Math.trunc(x/t)==i && Math.trunc(y/t)==j){
-			
-				for(var jj=0;jj<32;jj++){
-					for(var ii=0;ii<32;ii++){ 
-					
-						if( (x-i*t)==ii  &&  (y-j*t)==jj ){
-							if( c[ ( l[ i+j*256 ] ) ][ii][jj]==2 || c[(l[i+j*256])][ii][jj]==1 ){
-							
-								console.log("x/t ; y/t =    "+Math.trunc(x/t)+ "   " + Math.trunc(y/t)+ "                    "+" x-i*t ; y-j*t =    "+(x-i*t)+"    "+(y-j*t)+"                    "+" ID = "+ l[i+j*256]+"     col"+c[(l[i+j*256])][x-i*t][y-j*t]+ "    "+collx+" "+colly);
-
-								x = collx;
-								y = colly-2;
-								
-							}else{
-								
-								collx = x;
-								colly = y;
-							}
-						}
-						//ctx.strokeStyle="red";
-						//ctx.rect(ii+i*t,jj+j*t,ii+1+i*t,jj+1+j+t);
-						//ctx.stroke();
-					
-						/*
-						if(Math.trunc(x/t-(i))*t==ii && Math.trunc(y/t-(j))*t==jj && ( c[(l[i+j*256]),ii,jj]==2 || c[(l[i+j*256]),ii,jj]==1 )){
-							
-							y-=speed;
-						console.log("collis "+ii+"  "+jj+ "  "+x+"  "+y+ "       "+(x/t-(i))*t+"  "+(y/t-(j))*t );
-							
-						}
-						*/
-						
-						
-					}
+			for (var brds=1; brds<5; brds++){
+				
+				switch (brds) {
+					case 1: 
+						var testbrdx = Math.trunc(x/t);
+						var testbrdy = Math.trunc(y/t);
+					break;
+					case 2:
+						var testbrdx = Math.trunc(x/t)+1;
+						var testbrdy = Math.trunc(y/t);
+					break;
+					case 3:
+						var testbrdx = Math.trunc(x/t);
+						var testbrdy = Math.trunc(y/t)+1;
+					break;
+					case 4:
+						var testbrdx = Math.trunc(x/t)+1;
+						var testbrdy = Math.trunc(y/t)+1;
+					break;					
 				}
 				
-			
+				if((testbrdx==i && testbrdy==j)){
+				
+					for(var jj=0;jj<32;jj++){
+						for(var ii=0;ii<32;ii++){ 
+						
+							//if(inair==true){
+							
+								if( Math.trunc(x-i*t)==ii  &&  Math.trunc(y-j*t)==jj ){
+									if( c[ ( l[ i+j*256 ] ) ][ii][jj]==2 || c[(l[i+j*256])][ii][jj]==1 ){
+									
+										//console.log("x/t ; y/t =    "+Math.trunc(x/t)+ "   " + Math.trunc(y/t)+ "                    "+" x-i*t ; y-j*t =    "+(x-i*t)+"    "+(y-j*t)+"                    "+" ID = "+ l[i+j*256]+"     col"+c[(l[i+j*256])][x-i*t][y-j*t]+ "    "+collx+" "+colly);
+
+										//x = collx;
+										//y = colly;
+										//inair = false;
+
+										inair = 0;
+										y-=speed;
+										
+										
+										
+										
+										
+									}else{
+										
+										collx = x;
+										colly = y;
+									}
+								}
+								
+								//cherche si en l'air ou non
+								if( Math.trunc(x-i*t)==ii  &&  Math.trunc(y-j*t)==jj){
+									if( (c[ ( l[ i+j*256 ] ) ][ii][jj+5]==0)&&jj<27){
+										//inair = 1;
+										
+									}
+								}
+							//}
+							
+							
+							//ctx.strokeStyle="red";
+							//ctx.rect(ii+i*t,jj+j*t,ii+1+i*t,jj+1+j+t);
+							//ctx.stroke();
+						
+							/*
+							if(Math.trunc(x/t-(i))*t==ii && Math.trunc(y/t-(j))*t==jj && ( c[(l[i+j*256]),ii,jj]==2 || c[(l[i+j*256]),ii,jj]==1 )){
+								
+								y-=speed;
+							console.log("collis "+ii+"  "+jj+ "  "+x+"  "+y+ "       "+(x/t-(i))*t+"  "+(y/t-(j))*t );
+								
+							}
+							*/
+							
+							
+						}
+					}
+					
+				
+				}
 			}
-			
 			
 		
 			
@@ -193,6 +255,8 @@ setInterval(Frames,5);
 			
 			};
 		};
+		
+		//if(inair==true){y-=speed;}
 		
 		ctx.font = '28px Calibri';
 		ctx.fillStyle = 'white';
@@ -206,25 +270,32 @@ setInterval(Frames,5);
 		if(xact==0){
 			if(view==false){
 				if(saut==true){
-					ctx.drawImage(imgj[16+direction],x+xcm-tjx,y+ycm-tjy,tjx,tjy);
-				}else{//normal
-					ctx.drawImage(imgj[0+direction],x+xcm-tjx,y+ycm-tjy,tjx,tjy);
-					
+					ctx.drawImage(imgj[16+direction],x+xcm,y+ycm,tjx,tjy);
+				}else{
+					if(inair!=0){
+						ctx.drawImage(imgj[16+direction],x+xcm,y+ycm,tjx,tjy);
+					}else{
+					//normal
+						ctx.drawImage(imgj[0+direction],x+xcm,y+ycm,tjx,tjy);
+					}
 				}
 			}else{
-				ctx.drawImage(imgj[14+direction],x+xcm-tjx,y+ycm-tjy,tjx,tjy);
+				ctx.drawImage(imgj[14+direction],x+xcm,y+ycm,tjx,tjy);
 			}
 		}else{ //running
-			ctx.drawImage(imgj[2+direction],x+xcm-tjx,y+ycm-tjy,tjx,tjy);
+			ctx.drawImage(imgj[2+direction],x+xcm,y+ycm,tjx,tjy);
 		}
 		
-		y+=speed;
+		//y+=speed;
 
 		//aprés commande (execution du déplacement)
 		 if (xact==-1){x-=speed};
 		 if (xact==+1){x+=speed};
-		 if (yact==-1){y-=speed*2};
-		 if (yact==+1){y+=speed};
+		
+		if (inair==0){jump=-speed;}
+		if (inair==1||inair==2){y+=jump};
+		//console.log(inair+ "   "+speed);
+		if (inair==2){if(jump<speed){jump+=0.008;}};
 		
 		//déplace la caméra 
 		if(direction==false){
@@ -278,10 +349,15 @@ setInterval(Frames,5);
 	function Clav(e){
 		if(Touche==113||Touche==52){xact=-1;direction=true;};//q
 		if(Touche==100||Touche==54){xact=1;direction=false;};//d
-		if(Touche==122||Touche==56){yact=-1;saut=true}else{saut=false};//z
+		if((Touche==122||Touche==56)&&inair==0){
+			//yact=-1;
+			saut=1; console.log("go");
+			inair=2;		//doit etre a 1 + crono pour passer a 2 /!\
+			
+		}else{saut=false};//z
 		if(Touche==115||Touche==53){view=true}else{view=false};//s
 		if(Touche==81||Touche==68){xact=0;}//relaché
-		if(Touche==90||Touche==83){yact=0;}
+		if(Touche==90||Touche==83){yact=0;inair=2;}
 	};
 	
 	
