@@ -220,8 +220,8 @@ setInterval(Frames,8);
 							//a partir de la position du block brdx brdy et de la position collision colx coly
 							console.log(">"+(brdx*t+colx)+" "+(brdy*t+coly)+" "+colx+" "+coly+"    "+brdx+" "+brdy);	
 							
-							for(var j=0; j<64; j++){
-								for(var i=0; i<256; i++){
+							for(var j=brdy0-1; j<brdy0+2; j++){
+								for(var i=brdx0-1; i<brdx0+2; i++){
 									if(i==Math.trunc(brdx)&&j==Math.trunc(brdy)){
 										
 										for(var jj=0; jj<32; jj++){
