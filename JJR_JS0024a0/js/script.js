@@ -148,7 +148,7 @@ c[12][20][5]=1;c[12][21][5]=1;c[12][19][6]=1;c[12][20][6]=1;c[12][18][7]=1;c[12]
 
 
 
-setInterval(Frames,5);
+setInterval(Frames,8);
 
 	function Frames(){
 		
@@ -159,103 +159,99 @@ setInterval(Frames,5);
 		for(var j=0; j<64; j++){
 			for(var i=0; i<256; i++){
 				
-			if(i>=-xcm/t-1&&i<(-xcm+scx)/t){
-				if(j>=-ycm/t-1&&j<(-ycm+scy)/t){
-					ctx.drawImage(imgt[l[i+j*256]], i*t+xcm,j*t+ycm, t,t);
-				}
-			}
-			
-			//collisions Jazz (voir programme qbasic)
-		
-			for (var brds=1; brds<5; brds++){
-				
-				switch (brds) {
-					case 1: 
-						var testbrdx = Math.trunc(x/t);
-						var testbrdy = Math.trunc(y/t);
-					break;
-					case 2:
-						var testbrdx = Math.trunc(x/t)+1;
-						var testbrdy = Math.trunc(y/t);
-					break;
-					case 3:
-						var testbrdx = Math.trunc(x/t);
-						var testbrdy = Math.trunc(y/t)+1;
-					break;
-					case 4:
-						var testbrdx = Math.trunc(x/t)+1;
-						var testbrdy = Math.trunc(y/t)+1;
-					break;					
-				}
-				
-				if((testbrdx==i && testbrdy==j)){
-				
-					for(var jj=0;jj<32;jj++){
-						for(var ii=0;ii<32;ii++){ 
-						
-							//if(inair==true){
-							
-								if( Math.trunc(x-i*t)==ii  &&  Math.trunc(y-j*t)==jj ){
-									if( c[ ( l[ i+j*256 ] ) ][ii][jj]==2 || c[(l[i+j*256])][ii][jj]==1 ){
-									
-										//console.log("x/t ; y/t =    "+Math.trunc(x/t)+ "   " + Math.trunc(y/t)+ "                    "+" x-i*t ; y-j*t =    "+(x-i*t)+"    "+(y-j*t)+"                    "+" ID = "+ l[i+j*256]+"     col"+c[(l[i+j*256])][x-i*t][y-j*t]+ "    "+collx+" "+colly);
-
-										//x = collx;
-										//y = colly;
-										//inair = false;
-
-										inair = 0;
-										y-=speed;
-										
-										
-										
-										
-										
-									}else{
-										
-										collx = x;
-										colly = y;
-									}
-								}
-								
-								//cherche si en l'air ou non
-								if( Math.trunc(x-i*t)==ii  &&  Math.trunc(y-j*t)==jj){
-									if( (c[ ( l[ i+j*256 ] ) ][ii][jj+5]==0)&&jj<27){
-										//inair = 1;
-										
-									}
-								}
-							//}
-							
-							
-							//ctx.strokeStyle="red";
-							//ctx.rect(ii+i*t,jj+j*t,ii+1+i*t,jj+1+j+t);
-							//ctx.stroke();
-						
-							/*
-							if(Math.trunc(x/t-(i))*t==ii && Math.trunc(y/t-(j))*t==jj && ( c[(l[i+j*256]),ii,jj]==2 || c[(l[i+j*256]),ii,jj]==1 )){
-								
-								y-=speed;
-							console.log("collis "+ii+"  "+jj+ "  "+x+"  "+y+ "       "+(x/t-(i))*t+"  "+(y/t-(j))*t );
-								
-							}
-							*/
-							
-							
-						}
+				if(i>=-xcm/t-1&&i<(-xcm+scx)/t){
+					if(j>=-ycm/t-1&&j<(-ycm+scy)/t){
+						ctx.drawImage(imgt[l[i+j*256]], i*t+xcm,j*t+ycm, t,t);					
 					}
-					
-				
 				}
-			}
-			
-		
-			
-			//fin collision Jazz
-			
+
 			};
 		};
 		
+		//collision (cherche quels blocs sont concernés)
+		var brdx0 = Math.trunc(x/t);
+		var brdy0 = Math.trunc(y/t);
+		var brdx1 = Math.trunc((x+tjx)/t);
+		var brdy1 = Math.trunc((y+tjy)/t);
+		
+		console.log(brdx0+" "+brdy0+" "+brdx1+" "+brdy1+" ");
+		
+		//on rajoute 3 boucle pour etre sur de prendre la collision
+		for (var morex=0; morex<2; morex++){
+			for (var morey=0; morey<2; morey++){
+			
+				
+
+				//On travaille sur les blocs concernés
+				for (var brds=0; brds<4; brds++){
+					if(brds==0){
+						var brdx = brdx0
+						var brdy = brdy0
+						var colx = (x-Math.trunc(x/t)*t)+morex;
+						var coly = (y-Math.trunc(y/t)*t)+morey;
+					}
+					if(brds==1){
+						var brdx = brdx1
+						var brdy = brdy0
+						var colx = (x-Math.trunc(x/t)*t)+tjx+morex;
+						var coly = (y-Math.trunc(y/t)*t)+morey;				
+					}
+					if(brds==2){
+						var brdx = brdx0
+						var brdy = brdy1
+						var colx = (x-Math.trunc(x/t)*t)+morex;
+						var coly = (y-Math.trunc(y/t)*t)+tjy+morey;
+					}
+					if(brds==3){
+						var brdx = brdx1
+						var brdy = brdy1	
+						var colx = (x-Math.trunc(x/t)*t)+tjx+morex;
+						var coly = (y-Math.trunc(y/t)*t)+tjy+morey;				
+					}
+					
+					//les 4 blocs (condition doit etre dans la map)			
+					//if(brdx>=-xcm/t-1&&brdx<(-xcm+scx)/t){
+					//	if(brdy>=-ycm/t-1&&brdy<(-ycm+scy)/t){
+							
+							//cherche la position collision et < 32
+							if(colx>31){colx=colx-32}; //do while
+							if(coly>31){coly=coly-32}; //do while
+							
+							//a partir de la position du block brdx brdy et de la position collision colx coly
+							console.log(">"+(brdx*t+colx)+" "+(brdy*t+coly)+" "+colx+" "+coly+"    "+brdx+" "+brdy);	
+							
+							for(var j=0; j<64; j++){
+								for(var i=0; i<256; i++){
+									if(i==Math.trunc(brdx)&&j==Math.trunc(brdy)){
+										
+										for(var jj=0; jj<32; jj++){
+											for(var ii=0; ii<32; ii++){
+												
+												if( Math.trunc(colx)==ii  &&  Math.trunc(coly)==jj ){
+												
+													if( c[ ( l[ i+j*256 ] ) ][ii][jj]==2 || c[(l[i+j*256])][ii][jj]==1 ){
+														
+														inair = 0;
+														y-=speed;
+													
+													}
+												
+												}
+													
+											}
+										}
+										
+									}
+								}	
+							}
+							
+					//	}
+					//}
+					
+				}
+			}
+		}
+	
 		//if(inair==true){y-=speed;}
 		
 		ctx.font = '28px Calibri';
