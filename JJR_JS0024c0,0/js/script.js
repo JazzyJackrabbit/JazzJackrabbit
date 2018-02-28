@@ -148,7 +148,7 @@ c[12][20][5]=1;c[12][21][5]=1;c[12][19][6]=1;c[12][20][6]=1;c[12][18][7]=1;c[12]
 
 
 
-setInterval(Frames,8);
+setInterval(Frames,4);
 
 	function Frames(){
 		
@@ -173,17 +173,18 @@ setInterval(Frames,8);
 		var brdy0 = Math.trunc(y/t);
 		var brdx1 = Math.trunc((x+tjx)/t);
 		var brdy1 = Math.trunc((y+tjy)/t);
+		var brdx2 = Math.trunc((x+tjx/2)/t);
 		
 		console.log(brdx0+" "+brdy0+" "+brdx1+" "+brdy1+" ");
 		
-		//on rajoute 3 boucle pour etre sur de prendre la collision
+		//on rajoute 4 boucle pour etre sur de prendre la collision
 		for (var morex=0; morex<2; morex++){
 			for (var morey=0; morey<2; morey++){
 			
 				
 
 				//On travaille sur les blocs concernés
-				for (var brds=0; brds<4; brds++){
+				for (var brds=0; brds<3; brds++){
 					if(brds==0){
 						var brdx = brdx0
 						var brdy = brdy0
@@ -197,16 +198,10 @@ setInterval(Frames,8);
 						var coly = (y-Math.trunc(y/t)*t)+morey;				
 					}
 					if(brds==2){
-						var brdx = brdx0
+						var brdx = brdx2
 						var brdy = brdy1
 						var colx = (x-Math.trunc(x/t)*t)+morex;
 						var coly = (y-Math.trunc(y/t)*t)+tjy+morey;
-					}
-					if(brds==3){
-						var brdx = brdx1
-						var brdy = brdy1	
-						var colx = (x-Math.trunc(x/t)*t)+tjx+morex;
-						var coly = (y-Math.trunc(y/t)*t)+tjy+morey;				
 					}
 					
 					//les 4 blocs (condition doit etre dans la map)			
